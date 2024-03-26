@@ -1,11 +1,11 @@
 <template>
   <div class="login-container">
     <div class="left">
-      <img class="left-img" src="@/assets/截屏2024-03-25 17.59.16.png" alt="">
+      <img class="left-img" src="@/assets/loginpageimage.png" alt="">
     </div>
     <div class="right">
-        <h1 class="login-text" >Login</h1>
-        <div class="small-text">Don't have an account? <router-link to="/register"><span style="text-decoration: underline;">Sign up now!</span></router-link></div>
+        <h1 class="login-text" >登陆</h1>
+        <div class="small-text">没有账号?去 <router-link to="/register"><span style="text-decoration: underline;">注册!</span></router-link></div>
         <div class="form-box">
           <el-form
             ref="ruleFormRef"
@@ -21,12 +21,12 @@
               <el-input  type="password" v-model="form.password" />
             </el-form-item>
             <el-form-item>
-              <el-button class="login_btn" color="#738490" size="large" type="primary" @click="handleLoginClick">Login</el-button>
+              <el-button class="login_btn" color="#738490" size="large" type="primary" @click="handleLoginClick">登陆</el-button>
             </el-form-item>
           
           </el-form>
         </div>
-         <div class='small-text'><el-icon><ArrowLeft /></el-icon> <router-link to="/">Return Home</router-link></div>
+         <div class='small-text'><el-icon><ArrowLeft /></el-icon> <router-link to="/">返回首页</router-link></div>
       </div>
    
   </div>
@@ -119,6 +119,7 @@ const ruleFormRef = ref(null)
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
   -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0)); 
   mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) );     
 }
@@ -146,7 +147,7 @@ const ruleFormRef = ref(null)
 }
 .small-text{
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
   color: #726c6c;
 }
 /*

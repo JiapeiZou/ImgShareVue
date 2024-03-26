@@ -4,7 +4,10 @@
     <div class="home-container">
     <!-- ----------------------- -->
       <div class="header">
-        <a href="/" class="brand"><strong>image</strong></a>
+        <a href="/" class="brand">
+        <img class="logo-img" src="@/assets/logo.png" alt="">
+        <!-- <strong>image</strong> -->
+        </a>
         <div class="header-content">
           <div class="greet"><a href="/"><el-icon><House /></el-icon></a></div>
           <div>
@@ -14,7 +17,7 @@
               autocomplete="off"
               class="search_input"
               size="large"
-              placeholder="Search username"
+              placeholder="搜索用户名"
               style="width:400px; height:50px;"
               :prefix-icon="UserFilled"
               @keyup.enter="searchImages"
@@ -49,7 +52,7 @@
                 <li><router-link to="/login">登陆</router-link></li>
                 <li><router-link to="/register">注册</router-link></li>
               </template>
-              <li><el-button color="rgb(189, 79, 10)" round  @click="handleUploadImg"><el-icon class="icon-style"><Picture /></el-icon> Upload</el-button></li>
+              <li><el-button color="rgb(189, 79, 10)" round  @click="handleUploadImg"><el-icon class="icon-style"><Plus /></el-icon> 上传</el-button></li>
             </ul>
           </div>
         </div>
@@ -62,14 +65,14 @@
 <!-- -------------------------------- -->
       <el-footer class="footer">
         <div class="footer-img-box">
-          <img class="footer-img" src="@/assets/截屏2024-03-22 16.24.39.png" alt="">
+          <img class="footer-img" src="@/assets/footerimage.png" alt="">
         </div>
         <div class="footer-info">
-          <h1>Empowering your creativity</h1>
-          <span>"Create, inspire, and share with our vast collection."</span>
+          <h1>每张图片都有一个故事</h1>
+          <span>"发现世界，分享无限可能，尽在我们的广阔图库中"</span>
           <div>
-            <input type="text" placeholder="Leave a message..." v-model="message" class="footer-input">
-            <el-button round color="rgb(189, 79, 10)" @click="sendMessage">Send</el-button>
+            <input type="text" placeholder="与我们分享您的想法" v-model="message" class="footer-input">
+            <el-button round color="rgb(189, 79, 10)" @click="sendMessage">提交</el-button>
           </div>
         </div>
       </el-footer>
@@ -99,7 +102,7 @@
 
 <script setup>
 import LayoutFixed from '@/components/LayoutFixed.vue'
-import { House, Picture, UserFilled, ArrowDown, User } from '@element-plus/icons-vue'
+import { House, Plus, UserFilled, ArrowDown, User } from '@element-plus/icons-vue'
 import { useUserStore } from "@/stores/user"
 import {useImageStore} from "@/stores/images"
 import { useRouter } from "vue-router"
@@ -237,6 +240,10 @@ const sendMessage = async()=>{
   align-items: center;
   gap: 50px;
   padding: 0 100px;
+}
+.logo-img{
+  width:100px ;
+  height: auto;
 }
 .footer-img-box{
   flex: 1;

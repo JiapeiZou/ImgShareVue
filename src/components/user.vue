@@ -203,7 +203,7 @@ onMounted( () => {
 .top{
     padding: 20px;
     height: 240px;
-    background-image: url('~@/assets/截屏2024-03-16 11.42.55.png');
+    background-image: url('~@/assets/userdetailimage.png');
     border-bottom: 1px solid #c4bebe;
     background-size: cover; /* 完全铺满容器 */
     background-repeat: no-repeat; /* 不重复 */

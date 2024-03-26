@@ -4,7 +4,7 @@ import qs from 'qs'   // 把post中的请求data进行转换
 import { useUserStore } from '@/stores/user'
 
 
-const SERVER_HOST = 'http://127.0.0.1:5000'
+const SERVER_HOST = process.env.VUE_APP_SERVER_HOST
 
 class Http{
     constructor(){

@@ -4,7 +4,7 @@
             <div class="search">
                 <div>
                     <div class="upload-icon">
-                        <h3 class="h3-title">UPLOAD</h3>
+                        <h3 class="h3-title">Upload</h3>
                         <router-link to="/upload" v-if="userStore.userInfo.token">
                             <el-icon :size="30" class="icon"><Plus /></el-icon>
                         </router-link>
@@ -13,8 +13,8 @@
                         </router-link>
                     </div>  
                 </div>
-                <span style="font-size: 18px;">The internet’s source for visuals.</span>
-                <span>Powered by creators everywhere.</span>
+                <span style="font-size: 18px;">互联网上的视觉源泉，由各地的创作者驱动</span>
+                <span style="color: #8e8a8a;">用图片诠释独特的视角，分享独具匠心的创意.</span>
                 <div>
                     <el-input
                         v-model="searchText"
@@ -22,15 +22,15 @@
                         autocomplete="off"
                         class="search_input"
                         size="large"
-                        placeholder="Search high-resolution images"
+                        placeholder="搜索高清图片"
                         :prefix-icon="Search"
                         @keyup.enter="searchImages"
                     />
                 </div>
             </div>
             <div class="text">
-                <el-icon :size="30"><Paperclip /></el-icon>
-                Yes, it’s really free. All images can be downloaded and used for personal or commercial projects.
+                <el-icon class="Paperclip_icon" :size="35"><Paperclip /></el-icon>
+                在这里，我们为您呈现世界各地最引人入胜的视觉探索，让您畅游在无尽的创意灵感之中
             </div>
             <div class="bannar">
                 <el-carousel indicator-position="none">
@@ -175,6 +175,7 @@ onMounted(async () => {
     display: flex;
     gap: 12px;
     color: #fbf9f9;
+    
 }
 /* 搜索区域 */
 .search-img{
@@ -203,16 +204,25 @@ onMounted(async () => {
     line-height: 1.2;
 }
 .text{
+    
     box-sizing: border-box;
     padding: 30px;
     flex: 1;
-    /* aspect-ratio: 1/1;  宽高比为1:1，即正方形 */
     background: #f5f5f5;
     border-radius: 16px;
     color: #767676;
     font-size: 18px;
-    font-weight: 600;
-    line-height: 1.3333333333;
+
+    line-height: 1.5;
+    font-family: 'Microsoft YaHei', '微软雅黑', sans-serif;
+    text-indent: 2em; /* 使用 em 单位，表示两个字符的宽度 */
+    font-weight: 200;
+    position: relative;
+}
+.Paperclip_icon{
+    position: absolute;
+    top: -12px;
+    left: 10px;
 }
 .bannar{
     flex: 1;
@@ -229,6 +239,11 @@ onMounted(async () => {
     display: flex;
     justify-self:center;
     gap: 20px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    padding: 10px;
+    width: 220px;
+    color: #767676;
 }
 .icon{
     margin-top: 8px;

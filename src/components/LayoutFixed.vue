@@ -4,7 +4,8 @@
         <div class="left">
             <div>
                 <router-link to="/">
-                    <el-icon class="home-icon" size="30"><HomeFilled /></el-icon>
+                    <img class="logo-img" src="@/assets/logo.png" alt="">
+                    <!-- <el-icon class="home-icon" size="30"><HomeFilled /></el-icon> -->
                 </router-link>
             </div>
             <div class="search_input">
@@ -14,7 +15,7 @@
                     autocomplete="off"
                     style="width:600px;"
                     size="large"
-                    placeholder="Search high-resolution images"
+                    placeholder="搜索高清图片"
                     :prefix-icon="Search"
                     @keyup.enter="handleSearch"
                 />
@@ -27,9 +28,9 @@
                     <img :src="userStore.userInfo.user.avatar" alt="" class="avtar">
                 </router-link>
             </div>
-            <div v-else class="login"><router-link to="/register">LOGIN</router-link></div>
+            <div v-else class="login"><router-link to="/register">登陆</router-link></div>
             <div class="upload-btn">
-                <el-button @click="handleUploadImg" type="info" size="large" :icon="Plus" round>Upload</el-button>
+                <el-button @click="handleUploadImg" type="info" size="large" :icon="Plus" round>上传</el-button>
             </div>
         </div>
     </div>
@@ -40,7 +41,7 @@ import {ref} from 'vue'
 import { useRouter } from "vue-router"
 import { useUserStore } from "@/stores/user"
 import {useImageStore} from "@/stores/images"
-import {Search, Plus, HomeFilled} from '@element-plus/icons-vue'
+import {Search, Plus} from '@element-plus/icons-vue'
 import { useScroll } from '@vueuse/core'  // vueuse插件 useScroll方法 监测滚动距离
 import { ElMessage } from 'element-plus'
 
@@ -102,6 +103,12 @@ const handleUploadImg= ()=>{
 .home-icon{
     margin: 6px 20px 0 40px;
 }
+.logo-img{
+    width:auto;
+    height: 50px;
+    margin-left: 30px;
+    padding-bottom: 10px;
+}
 /* .logo{
     margin-left: 40px;
     margin-right: 20px;
@@ -113,8 +120,7 @@ const handleUploadImg= ()=>{
 }
 .login{
     font-family: Open Sans, system-ui;
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 18px;
     width: 60px; 
     margin: auto;
 }

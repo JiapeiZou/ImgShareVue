@@ -1,11 +1,11 @@
 <template>
   <div class="register-container">
     <div class="left">
-      <img class="left-img" src="@/assets/截屏2024-03-25 18.41.59.png" alt="">
+      <img class="left-img" src="@/assets/registerpageimage.png" alt="">
     </div>
     <div class="right">
-      <h1 class="login-text">Join us</h1>
-      <div class="small-text">Already have an account? <router-link to="/login"><span style="text-decoration: underline;">Login</span></router-link></div>
+      <h1 class="login-text">注册</h1>
+      <div class="small-text">已有账号？立即 <router-link to="/login"><span style="text-decoration: underline;">登录</span></router-link></div>
       <div class="form-box">
         <el-form
           ref="ruleFormRef"
@@ -31,7 +31,7 @@
             <el-button color="#dddae0" class="register_btn" size="large" type="primary" @click="handleRegisterClick">注册</el-button>
           </el-form-item> 
         </el-form>
-        <div class='small-text'><el-icon><ArrowLeft /></el-icon> <router-link to="/">Return Home</router-link></div>
+        <div class='small-text'><el-icon><ArrowLeft /></el-icon> <router-link to="/">返回首页</router-link></div>
       </div>
     </div>
   </div>
