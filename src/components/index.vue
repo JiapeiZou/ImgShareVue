@@ -42,35 +42,36 @@
         </div>
 
         <div class="img-container">
-        <div v-for="img in imageStore.img_list" :key="img.id" class="image-wrapper">
-            <el-image
-            class="demo-image__preview"
-            :src="img.filename[0]"
-            :zoom-rate="1.2"
-            :max-scale="7"
-            :min-scale="0.2"
-            :preview-src-list="img.filename"
-            :initial-index="4"
-            fit="contain"
-            style="width: 100%; height: auto;"
-            />
-            <!-- 图片蒙层 -->
-            <div class="overlay">  
-                <div class="img_detail">
-                    <img
-                    :src="http.server_host + '/media/avatar/' + img.user_avatar"
-                    class="avatar"
-                    @click="goToUserDetail(img.user_id)"
+            <template v-if="imageStore.img_list.length>0">
+                <div v-for="img in imageStore.img_list" :key="img.id" class="image-wrapper">
+                    <el-image
+                    class="demo-image__preview"
+                    :src="img.filename[0]"
+                    :zoom-rate="1.2"
+                    :max-scale="7"
+                    :min-scale="0.2"
+                    :preview-src-list="img.filename"
+                    :initial-index="4"
+                    fit="contain"
+                    style="width: 100%; height: auto;"
                     />
-                    <div>
-                        <h3 class="img_text">{{img.username}}</h3>
-                        <span class="img_text">{{img.title}}</span>
+                    <!-- 图片蒙层 -->
+                    <div class="overlay">  
+                        <div class="img_detail">
+                            <img
+                            :src="http.server_host + '/media/avatar/' + img.user_avatar"
+                            class="avatar"
+                            @click="goToUserDetail(img.user_id)"
+                            />
+                            <div>
+                                <h3 class="img_text">{{img.username}}</h3>
+                                <span class="img_text">{{img.title}}</span>
+                            </div>
+                        </div>  
                     </div>
-                </div>  
-            </div>
+                </div>
+            </template>
         </div>
-        
-    </div>
 
     </div>
     
@@ -176,6 +177,10 @@ onMounted(async () => {
     gap: 12px;
     color: #fbf9f9;
     
+}
+.img_text{
+    font-size: 14px;
+    font-weight: 300;
 }
 /* 搜索区域 */
 .search-img{

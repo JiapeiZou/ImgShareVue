@@ -87,14 +87,13 @@ const handleRegisterClick = () =>{
     if (valid){
       // 通过 发请求
       let res = await http.registerCommit(form.value);
-      console.log( res.code)
       console.log( res.data)
       if(res.code === 200){
         // 跳转首页 
         ElMessage.success('注册成功！')
         router.push('/login')
       }else{
-        ElMessage.error('注册失败！')
+        ElMessage.error(res.message)
       }
     } 
   })

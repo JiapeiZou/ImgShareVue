@@ -17,9 +17,14 @@ export const useImageStore = defineStore('img', ()=>{
     const  getindexInfo = async() =>{
         const result = await http.getIndex()
         if( result.code === 200){
-            img_list.value =  result.data
-            const baseUrl = http.server_host + '/media/imgs/'
-            updateFilename(baseUrl); // 完善地址
+            if(result.data.length > 0){
+                console.log("8888888888888",result.data)
+                img_list.value =  result.data
+                const baseUrl = http.server_host + '/media/imgs/'
+                updateFilename(baseUrl); // 完善地址
+            }
+        }else{
+            ElMessage.warning(result.message)
         }
     }
     // search搜索关键字图片功能
@@ -52,7 +57,6 @@ export const useImageStore = defineStore('img', ()=>{
                     }
                 }
             })
-            console.log("//? ?? ??? ???",search_user_list.value)
         }else{
             ElMessage.warning(result.message)
         }
@@ -61,12 +65,15 @@ export const useImageStore = defineStore('img', ()=>{
 
     // 修改filename
     const updateFilename = (baseUrl)=>{
-        img_list.value = img_list.value.map(img => {
-            return {
-                ...img,
-                filename: img.filename.map(item => baseUrl + item )
-            }
-        })
+        console.log("//? ?? ??? ???",img_list.value )
+        if(Array.isArray(img_list.value)){
+            img_list.value = img_list.value.map(img => {
+                return {
+                    ...img,
+                    filename: img.filename.map(item => baseUrl + item )
+                }
+            })
+        }
     }
     // delete
     const deleteImage = async(id) =>{

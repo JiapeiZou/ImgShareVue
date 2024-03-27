@@ -19,8 +19,8 @@ const routes = [
     path: '/',
     component: () => import("@/components/home.vue"),
     name: 'home',
-    children: [
-      { // --子路由---
+    children: [ // --子路由---
+      { 
         path: '',
         name: 'index',
         component: () => import("@/components/index.vue")

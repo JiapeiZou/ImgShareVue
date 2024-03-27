@@ -39,7 +39,7 @@
                 <el-form-item label="标题" prop="title">
                     <el-input
                         v-model="imageForm.title"
-                        maxlength="10"
+                        maxlength="20"
                         placeholder="Please input"
                         show-word-limit
                         type="text"

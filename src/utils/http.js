@@ -8,7 +8,7 @@ const SERVER_HOST = process.env.VUE_APP_SERVER_HOST
 
 class Http{
     constructor(){
-        this.server_host = SERVER_HOST
+        this.server_host = SERVER_HOST // 服务器主机名
         this.http = axios.create({
             baseURL: SERVER_HOST + "/api",
             timeout: 1000*60,
@@ -18,7 +18,8 @@ class Http{
         this.http.interceptors.request.use(config => {
             const userStore = useUserStore() 
             const token = userStore.userInfo.token // pinia中存储
-            if(token){ // // 将token设置在请求头中 所有通过 Axios 发出的 HTTP 请求都会自动包含这个 Authorization 头部，其值为 'Bearer ' + token
+            if(token){ 
+                // 将token设置在请求头中 所有通过 Axios 发出的 HTTP 请求都会自动包含这个 Authorization 头部，其值为 'Bearer ' + token
                 config.headers.Authorization = "Bearer " + token
             }                  
             return config
@@ -49,8 +50,8 @@ class Http{
         const url = '/detail/image'
         return this._post(url,data)
     }
-    getIndex(){
-        const url = '/home'// 首页获取数据
+    getIndex(){ // 首页获取数据
+        const url = '/home'
         return this.http.get(url)
     }
     getUserImage(user_id){ // 获取用户图片相关信息

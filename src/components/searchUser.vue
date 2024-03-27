@@ -18,14 +18,24 @@
                     </div>
                 </div>
                 <div class="user_count"><el-icon style="margin-right: 8px;"><UserFilled /></el-icon> <span>users {{imageStore.search_user_list.length}}</span> </div>
-                <div class="user-list">
-                    <div class="user_list_item" v-for="(usr,index ) in imageStore.search_user_list" :key="index">
-                        <router-link :to="`/user/${usr.uid}`">
-                            <img v-if="usr.avatar" class="user-avtar-img" :src="usr.avatar" alt="">
-                            <div v-else class="user-avtar-img"></div>
-                            <h3 class="user_name">{{usr.username}}</h3>
-                        </router-link>
+                <div>
+                    <div class="user-list" v-if="imageStore.search_user_listlength > 0">
+                        <div class="user_list_item" v-for="(usr,index ) in imageStore.search_user_list" :key="index">
+                            <router-link :to="`/user/${usr.uid}`">
+                                <img v-if="usr.avatar" class="user-avtar-img" :src="usr.avatar" alt="">
+                                <div v-else class="user-avtar-img"></div>
+                                <h3 class="user_name">{{usr.username}}</h3>
+                            </router-link>
+                        </div>
                     </div>
+                    <div v-else>
+                        <el-empty description="没有找到该用户>.<">
+                            <el-button  type="primary">
+                                <router-link to="/">返回首页</router-link>
+                            </el-button>
+                        </el-empty>
+                    </div>
+                    
                 </div>
             </div>
            
@@ -38,10 +48,6 @@ import LayoutFixed from '@/components/LayoutFixed.vue'
 import {UserFilled} from '@element-plus/icons-vue'
 import {useImageStore} from "@/stores/images"
 const imageStore = useImageStore()
-
-console.log("//? ?? ??? ???",imageStore.search_user_list)
-
-
 const srcList = [
   'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
   'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
@@ -50,14 +56,9 @@ const srcList = [
   'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
   'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg',
 ]
-
-
-
 </script>
 
 <style scoped>
-
-/* src="https://images.squarespace-cdn.com/content/v1/63cb4bc4764ff91373380b7d/b1937c38-cb5a-48f2-bf33-5e08fecf6c43/image-asset.jpeg"  */
 .search_user{
     width: 100%;
     height: auto;
