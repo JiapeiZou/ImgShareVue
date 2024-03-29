@@ -40,7 +40,7 @@
                     <el-input
                         v-model="imageForm.title"
                         maxlength="20"
-                        placeholder="Please input"
+                        placeholder="请输入标题"
                         show-word-limit
                         type="text"
                     />
@@ -50,7 +50,7 @@
                      <el-input
                         v-model="imageForm.detail"
                         maxlength="200"
-                        placeholder="Please input"
+                        placeholder="请输入描述"
                         show-word-limit
                         type="textarea"
                     />
@@ -117,13 +117,12 @@ const imageUploadSuccess = (response) =>{
 }
 //---点击照片墙 打开dialog，放大图片---
 const handledialog =(file)=>{
-    console.log(file)
     dialogImageUrl.value = file.url
     dialogVisible.value = true
 }
 //--点击照片墙 删除图片
 const handleRemove =()=>{
-    console.log("+++++++++")
+    ElMessage.success("图片删除成功！")
 }
 //--上传图片之前 的约束: 图片文件大小、格式类型
 const beforeAvatarUpload = (rawFile)=>{
@@ -142,7 +141,6 @@ const beforeAvatarUpload = (rawFile)=>{
 // ----form表单提交按钮
 const handleUploadClick = ()=>{
     ruleFormRef.value.validate(async(valid)=>{
-        console.log(imageForm)
         // 表单校验成功
         if(valid){
             // 数据数据
@@ -151,7 +149,6 @@ const handleUploadClick = ()=>{
                 detail: imageForm.value.detail,
                 filenames: imageForm.value.filenames.map(i => i.response.data.filename)
             };
-            console.log(to_submit)
             // 发上传图片请求
             const result = await http.uploadimages(to_submit)
             if (result.code === 200){

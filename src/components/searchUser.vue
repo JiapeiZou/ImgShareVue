@@ -19,7 +19,7 @@
                 </div>
                 <div class="user_count"><el-icon style="margin-right: 8px;"><UserFilled /></el-icon> <span>users {{imageStore.search_user_list.length}}</span> </div>
                 <div>
-                    <div class="user-list" v-if="imageStore.search_user_listlength > 0">
+                    <div class="user-list" v-if="imageStore.search_user_list.length > 0">
                         <div class="user_list_item" v-for="(usr,index ) in imageStore.search_user_list" :key="index">
                             <router-link :to="`/user/${usr.uid}`">
                                 <img v-if="usr.avatar" class="user-avtar-img" :src="usr.avatar" alt="">

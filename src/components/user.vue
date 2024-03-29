@@ -124,7 +124,6 @@ const userImageList = async(user_id)=>{
             filename: img.filename.map(item => baseUrl + item )
         }
     })
-    console.log("------test-----", user_detail.value.user_img_list)
    }
 } 
 // ---编辑图片 click---

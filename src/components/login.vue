@@ -47,7 +47,6 @@ const form = ref({
 
 // 手机号 自定义校验规则
 const phoneNumber = (rule, value, callback)=>{
-  console.log(value)
   if (value.trim().length === 11 ) {
     callback()
   }
@@ -70,7 +69,6 @@ const ruleFormRef = ref(null)
       if (valid) {
         // 通过->发请求 getUserInfo
         const result = await userStore.getUserInfo({ phone_number, password })
-          console.log("......", result)
           if (result.code===200){
             router.push('/') 
           }

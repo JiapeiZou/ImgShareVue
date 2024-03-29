@@ -11,16 +11,13 @@ export const useUserStore = defineStore('user', ()=>{
 
     // 获取用户数据（login接口 提交用户表单，返回用户信息)
     const getUserInfo = async({ phone_number, password })=>{
-        console.log('============')
         const result = await http.loginCommit({ phone_number, password })
         if(result.code === 200){
             userInfo.value = result.data
             userInfo.value.user.avatar = http.server_host + '/media/avatar/' + result.data.user.avatar
-            console.log("---userInfo---////", userInfo.value)
         }else{
             ElMessage.error(result.message)
         }
-        console.log("result---", result)
         return result
     }
     // 退出登陆逻辑

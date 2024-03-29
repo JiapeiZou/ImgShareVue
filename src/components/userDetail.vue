@@ -68,11 +68,9 @@ const userImageList = async(user_id)=>{
             filename: img.filename.map(item => baseUrl + item )
         }
     })
-    // console.log("-----------", user_detail.value.user_img_list)
    }
 } 
 
-// {{user_detail.username}}  {{user_detail.image_count}}
 onMounted( () => {
     // ---获取动态路由 参数---
     userImageList( useRoute().params.uid )
