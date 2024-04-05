@@ -50,17 +50,28 @@ const routes = [
     name: 'user'
   },
   {
-    // 一级：搜索页面
+    // 一级：搜索用户页面
     path:'/search',
     component: () => import("@/components/searchUser.vue"),
     name:'search'
+  },
+  {
+    // 一级：搜索页面
+    path:'/search/img/:keyword',
+    component:() => import("@/components/searchImg.vue"),
+    name:'searchImg'
   }
+
 ]
 
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
+  scrollBehavior() {
+    // 始终滚动到顶部
+    return { top: 0 }
+  },
 })
 
 export default router

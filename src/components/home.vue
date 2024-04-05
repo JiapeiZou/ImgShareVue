@@ -104,13 +104,11 @@
 import LayoutFixed from '@/components/LayoutFixed.vue'
 import { House, Plus, UserFilled, ArrowDown, User } from '@element-plus/icons-vue'
 import { useUserStore } from "@/stores/user"
-import {useImageStore} from "@/stores/images"
 import { useRouter } from "vue-router"
 import {ref } from 'vue'
 import http from '@/utils/http'
 import { ElMessage } from 'element-plus'
 
-const imageStore = useImageStore()
 const userStore = useUserStore()
 const router = useRouter()
 const uploadDialogVisible = ref(false)
@@ -119,11 +117,10 @@ const searchText = ref('')
 const message = ref('')
 
 // ---搜索按钮用户名 回车键事件---
-const searchImages = async() =>{
+const searchImages = () =>{
   if(searchText.value){
-    await imageStore.searchUser(searchText.value)
+    router.push({path: '/search', query: { su: searchText.value }})
     searchText.value = "" // 清空输入框
-    router.push('/search')
   }else{
     return
   }

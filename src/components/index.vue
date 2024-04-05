@@ -40,39 +40,10 @@
                 </el-carousel>
             </div>
         </div>
-
-        <div class="img-container">
-            <template v-if="imageStore.img_list.length>0">
-                <div v-for="img in imageStore.img_list" :key="img.id" class="image-wrapper">
-                    <el-image
-                    class="demo-image__preview"
-                    :src="img.filename[0]"
-                    :zoom-rate="1.2"
-                    :max-scale="7"
-                    :min-scale="0.2"
-                    :preview-src-list="img.filename"
-                    :initial-index="4"
-                    fit="contain"
-                    style="width: 100%; height: auto;"
-                    />
-                    <!-- 图片蒙层 -->
-                    <div class="overlay">  
-                        <div class="img_detail">
-                            <img
-                            :src="http.server_host + '/media/avatar/' + img.user_avatar"
-                            class="avatar"
-                            @click="goToUserDetail(img.user_id)"
-                            />
-                            <div>
-                                <h3 class="img_text">{{img.username}}</h3>
-                                <span class="img_text">{{img.title}}</span>
-                            </div>
-                        </div>  
-                    </div>
-                </div>
-            </template>
+        <Img v-if="imgList" :imgList="imgList" />
+        <div v-else> 
+            <el-empty description="第一个用户就是你， 赶紧上传图片吧！" />
         </div>
-
     </div>
     
 </template>
@@ -81,15 +52,23 @@
 import http from '@/utils/http'
 import { useRouter } from 'vue-router'
 import { onMounted, ref} from 'vue';
-import {useImageStore} from "@/stores/images"
 import { useUserStore } from "@/stores/user"
 import {Search, Plus, Paperclip} from '@element-plus/icons-vue'
+import { useWindowSize } from '@vueuse/core' // 获取显示器宽度
+import Img from '@/components/img.vue'
+import { ElMessage } from 'element-plus';
 
 const router = useRouter()
-const imageStore = useImageStore()
 const userStore = useUserStore()
 const searchText = ref('')
+const img_width = ref()
+const imgList = ref(null)
+const { width } = useWindowSize()
 
+// 每个图片的宽度 [ 总 - （margin 80*2 ） - （图片间隔 20*2）] / 3
+const imageWidth = (width.value - 160 - 40) / 3
+img_width.value = parseFloat(imageWidth.toFixed(2))
+// 轮播图
 const srcList = [
   'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
   'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
@@ -99,32 +78,33 @@ const srcList = [
   'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
   'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg',
 ]
-
-// 点击图片头像 跳转页面
-const goToUserDetail = async(user_id) => {
-    router.push(`/user/${user_id}`)
-}
 // 搜索图片功能
 const searchImages = async()=>{
     if(searchText.value){
-        await imageStore.searchFilterImage(searchText.value)
-        searchText.value = ""
+        router.push(`/search/img/${searchText.value}`)
     }else{
         return
     }
 }
-
-onMounted(async () => {
-    await imageStore.getindexInfo();  // 等页面加载完成后 获取数据
+// 获取首页数据
+const getindexInfo= async() => {
+    const result = await http.getIndex()
+    if( result.code === 200){
+        imgList.value = result.data // 传递给子组件
+    }else{
+        ElMessage.warning(result.message)
+    }
+}
+// 等页面加载完成后 获取首页数据
+onMounted(() => {
+    getindexInfo();  
 });
-
-
-
 
 </script>
 
 <style scoped>
 .img-container {
+    width: 100%;
     column-count: 3; /* 设置列数为3 */
     column-gap: 20px; /* 设置列间距 */
 }
@@ -132,10 +112,6 @@ onMounted(async () => {
     break-inside: avoid; /* 防止内容跨列分割 */
     margin-bottom: 20px; /* 设置图片间距 */
     position: relative;  /* 开启定位 */
-}
-.demo-image__preview {
-    width: 100%;
-    height: auto;
 }
 .overlay{
     position: absolute;

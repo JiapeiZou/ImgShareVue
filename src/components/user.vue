@@ -9,24 +9,54 @@
             <div class="user-">{{userStore.userInfo.user.username}} </div>
             <div class="user-info"><el-icon><UserFilled /></el-icon> {{moment(user_detail.user_join_time).format('YYYY.MM.DD')}}</div>
             <div class="user-info"><el-icon><CameraFilled /></el-icon>专辑 {{user_detail.user_img_list.length}}</div>
-            <div class="img-container">
-                <div v-for="img in user_detail.user_img_list" :key="img.id" class="image-wrapper">
-                    <el-card  shadow="hover">
-                        <img :src="img.filename[0]" alt="" class="img" style="width: 100%; height: auto;">
-                        <div class="img_detail">标题：{{img.title}}</div>
-                        <div class="img_detail">描述：{{img.detail}}</div>
-                        <div class="img_detail"><el-icon style="margin-top:2px;"><Picture /></el-icon>：{{img.filename.length}}张</div>
-                        <div class="img_btn" style="text-align: right;">
-                            <el-button type="primary"  circle size="small" @click="handleEditImg(img)"><el-icon><Edit /></el-icon></el-button>
+            <div class="empty"><el-button type="info" :icon="Plus" @click="toUploadImg">上传</el-button></div>
+            <div>
+                
+                <template v-if="user_detail.user_img_list.length === 0">
+                        <el-empty description="分享你的第一张照片" />
+                </template>
+                <template v-else>
+                    <div class="img-container">
+                    <div v-for="img in user_detail.user_img_list" :key="img.id" class="image-wrapper">
+                        <el-card  shadow="hover">
+                            <!--  -->
+                            <el-image
+                                class="demo-image__preview"
+                                :src="img.filename[0]"
+                                :zoom-rate="1.2"
+                                :max-scale="7"
+                                :min-scale="0.2"
+                                :preview-src-list="img.filename"
+                                :initial-index="4"
+                                fit="contain"
+                                :style="{width: img_width + 'px', height: Math.round(img_width*(img.height/img.width)) + 'px'}" 
+                            >
+                            <!-- 图片未加载成功时 占位内容 -->
+                                <template #placeholder>
+                                    <img :src="'data:image/jpeg;base64,' + img.small_img" 
+                                        :style="{width: img_width + 'px', height: Math.round(img_width*(img.height/img.width)) + 'px'}"
+                                        alt="">
+                                </template>
+                            </el-image>
+                            <!--  -->
                             
-                            <el-popconfirm title="你确定删除当前图片吗?" placement="top-start"  @confirm="handleDelete(img)">
-                                        <template #reference>
-                                            <el-button type="danger" circle  size="small"><el-icon><Delete /></el-icon></el-button>
-                                        </template>
-                            </el-popconfirm>
+                            <div class="img_detail">标题：{{img.title}}</div>
+                            <div class="img_detail">描述：{{img.detail}}</div>
+                            <div class="img_detail"><el-icon style="margin-top:2px;"><Picture /></el-icon>：{{img.filename.length}}张</div>
+                            <div class="img_btn" style="text-align: right;">
+                                <el-button type="primary"  circle size="small" @click="handleEditImg(img)"><el-icon><Edit /></el-icon></el-button>
+                                <el-popconfirm title="你确定删除当前图片吗?" placement="top-start"  @confirm="handleDelete(img)">
+                                            <template #reference>
+                                                <el-button type="danger" circle  size="small"><el-icon><Delete /></el-icon></el-button>
+                                            </template>
+                                </el-popconfirm>
+                            </div>
+                        </el-card>
                         </div>
-                    </el-card>
-                </div>
+                    </div>
+                </template>
+
+            
             </div>
             
             <!-- el-dialog -->
@@ -48,26 +78,19 @@
                                 <img :src="imgitem" alt="" class="img-item">
                                 <div class="overlay"> 
                                     <el-icon color="#fff" size="20px" style="margin-right:20px;" @click="imgView(imgitem)" ><ZoomIn /></el-icon>
-                                    <el-popconfirm title="你确定删除当前图片吗?" placement="right" @confirm="imgDelete(index)">
-                                        <template #reference>
-                                            <el-icon color="#fff" size="20px"><Delete/></el-icon>
-                                        </template>
-                                    </el-popconfirm>
-                                    <!-- <el-icon color="#fff" size="20px" @click="imgDelete(index)"><Delete/></el-icon> -->
+                                    <el-icon color="#fff" size="20px" @click="imgDelete(index)"><Delete/></el-icon>
                                 </div> 
                             </li>
                         </ul>
                         <el-dialog v-model="largeSizeImg">
                             <img w-full :src="dialogImageUrl" alt="Preview Image" style="width:100%; height:100%;" />
                         </el-dialog>
-                       
-
                     </el-form-item>
                 </el-form>
 
                 <template #footer>
                     <div class="dialog-footer">
-                        <el-button @click="dialogFormVisible = false"> 取消 </el-button>
+                        <el-button @click="handleCancel"> 取消 </el-button>
                         <el-button type="primary" @click="editImgForm"> 确定 </el-button>
                     </div>
                 </template>
@@ -78,15 +101,20 @@
 </template>
 
 <script setup>
-import { HomeFilled, Picture, UserFilled, CameraFilled, Delete, ZoomIn, Edit} from '@element-plus/icons-vue'
+import { HomeFilled, Picture, UserFilled, CameraFilled, Delete, ZoomIn,Plus, Edit} from '@element-plus/icons-vue'
 import LayoutFixed from '@/components/LayoutFixed.vue'
 import { useUserStore } from "@/stores/user"
 import { useImageStore } from "@/stores/images"
 import { ElMessage } from 'element-plus'
+import {useRouter} from 'vue-router'
 import {onMounted, ref } from 'vue'
 import moment from "moment"  // 格式化时间
 import http from '@/utils/http'
+import { useWindowSize } from '@vueuse/core' // 获取显示器宽度
 
+const router = useRouter()
+const { width } = useWindowSize()
+const img_width = ref()
 const ruleFormRef = ref(null)
 const dialogFormVisible = ref(false)
 const largeSizeImg = ref(false)
@@ -94,6 +122,7 @@ const dialogImageUrl = ref('')
 const userStore = useUserStore()
 const userImgStore = useImageStore()
 const user_detail = ref()
+const updateBefore_imgs = ref([])  // 记录被删除之前的图片数据，在取消修改时 复原
 const baseUrl = http.server_host + '/media/imgs/'
 const avatar_baseUrl = http.server_host + '/media/avatar/'
 user_detail.value = {
@@ -109,6 +138,9 @@ const form = ref({
     detail: "",
     imgs: []
 })
+// 根据显示器宽度 计算图片的宽度
+const imgWidth = (width.value-100-20-120)/3
+img_width.value = parseFloat(imgWidth.toFixed(2))
 
 // ---获取用户详情页 数据---
 const userImageList = async(user_id)=>{
@@ -126,6 +158,12 @@ const userImageList = async(user_id)=>{
     })
    }
 } 
+// ---上传图片click---
+const toUploadImg =()=>{
+    if(userStore.userInfo.token){
+        router.push('/upload')
+    }
+}
 // ---编辑图片 click---
 const handleEditImg = (img)=>{
     dialogFormVisible.value = true
@@ -151,6 +189,8 @@ const imgDelete = (idx) => {
     if (form.value.imgs.length == 1) {
         ElMessage.error("至少保留一张图片")
     } else {
+        updateBefore_imgs.value = form.value.imgs
+        console.log(idx, 222)
         form.value.imgs.splice(idx,1)
      }
 }
@@ -159,7 +199,16 @@ const rules = {
     title:[{required: true, message:'标题不能为空', trigger: 'blur'}],
     detail: [{required: true, message:'描述不能为空', trigger: 'blur'}]
 }
-// ---提交表单---
+// ---取消修改按钮---
+const handleCancel = () =>{
+    // 恢复数据
+    form.value.imgs = updateBefore_imgs.value
+    // 重新获取数据， 刷新页面
+    userImageList(userStore.userInfo.user.id)
+    // 关闭对话框
+    dialogFormVisible.value = false
+}
+// ---提交表单 确定按钮---
 const editImgForm = ()=>{
     // 关闭对话框
     dialogFormVisible.value = false
@@ -180,7 +229,6 @@ const editImgForm = ()=>{
         ElMessage.error('验证不通过！')
         }
     })
-
 }
 
 onMounted( () => {
@@ -219,8 +267,8 @@ onMounted( () => {
     height: 110px ;
     width: 110px;
     border-radius: 50%;
-     margin-top: 5px;
-   margin-left: 5px;
+    margin-top: 5px;
+    margin-left: 5px;
 }
 .user-name{
     font-size:32px;
@@ -296,4 +344,10 @@ onMounted( () => {
     width: 100%;
     text-align: center;
 }
+/* .empty{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+} */
 </style>

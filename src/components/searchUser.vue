@@ -17,16 +17,18 @@
                         <img :src="url" alt="" class="img">
                     </div>
                 </div>
-                <div class="user_count"><el-icon style="margin-right: 8px;"><UserFilled /></el-icon> <span>users {{imageStore.search_user_list.length}}</span> </div>
+                <div class="user_count"><el-icon style="margin-right: 8px;"><UserFilled /></el-icon> <span>users {{search_user_list.length}}</span> </div>
                 <div>
-                    <div class="user-list" v-if="imageStore.search_user_list.length > 0">
-                        <div class="user_list_item" v-for="(usr,index ) in imageStore.search_user_list" :key="index">
-                            <router-link :to="`/user/${usr.uid}`">
-                                <img v-if="usr.avatar" class="user-avtar-img" :src="usr.avatar" alt="">
-                                <div v-else class="user-avtar-img"></div>
-                                <h3 class="user_name">{{usr.username}}</h3>
+                    <div class="user-list" v-if="search_user_list.length > 0">
+                        <template v-for="(usr,index ) in search_user_list" :key="index">
+                            <router-link :to="`/user/${usr.uid}`" class="user_list_item">
+                                <div>
+                                    <img v-if="usr.avatar" class="user-avtar-img" :src="usr.avatar" alt="">
+                                    <div v-else class="user-avtar-img"></div>
+                                    <h3 class="user_name">{{usr.username}}</h3>
+                                </div>
                             </router-link>
-                        </div>
+                        </template>
                     </div>
                     <div v-else>
                         <el-empty description="没有找到该用户>.<">
@@ -46,8 +48,13 @@
 <script setup>
 import LayoutFixed from '@/components/LayoutFixed.vue'
 import {UserFilled} from '@element-plus/icons-vue'
-import {useImageStore} from "@/stores/images"
-const imageStore = useImageStore()
+import { ElMessage } from 'element-plus'
+import { ref,onMounted } from 'vue'
+import { useRoute } from 'vue-router';
+import http from '@/utils/http'
+
+const search_user_list = ref([])
+const route = useRoute();
 const srcList = [
   'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
   'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
@@ -56,6 +63,33 @@ const srcList = [
   'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
   'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg',
 ]
+
+// 获取用户搜索页面数据 search
+const getSearchUserInfo = async() =>{
+    const query_search_user = route.query.su
+    const result = await http.searchUsername(query_search_user)
+    if(result.code === 200){
+        const baseUrl = http.server_host + '/media/avatar/'
+        // result.data： [{"avatar": "a07534.jpeg","username": "baby"},{ "avatar": null,"username": "bnjju" }]
+        search_user_list.value = result.data.map( img => {
+            if (img.avatar){
+                return {
+                    ...img,
+                    avatar: baseUrl + img.avatar
+                }
+            }else{
+                return {
+                    ...img
+                }
+            }
+        })
+    }else{
+        ElMessage.warning(result.message)
+    }
+}
+onMounted(()=>{
+    getSearchUserInfo()
+})
 </script>
 
 <style scoped>

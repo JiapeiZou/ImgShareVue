@@ -9,26 +9,39 @@
             <div class="user-name">{{user_detail.username}}</div>
             <div class="user-info"><el-icon><UserFilled /></el-icon> {{moment(user_detail.user_join_time).format('YYYY-MM-DD')}}</div>
             <div class="user-info"><el-icon><CameraFilled /></el-icon>专辑 {{user_detail.user_img_list.length}}</div>
-            <div class="img-container">
-                <div v-for="img in user_detail.user_img_list" :key="img.id" class="image-wrapper">
-                    <el-card  shadow="hover">
-                        <el-image
-                            class="demo-image__preview"
-                            :src="img.filename[0]"
-                            :zoom-rate="1.2"
-                            :max-scale="7"
-                            :min-scale="0.2"
-                            :preview-src-list="img.filename"
-                            :initial-index="4"
-                            fit="contain"
-                            style="width: 100%; height: auto;"
-                        />
-                        <div class="img_detail">标题：{{img.title}}</div>
-                        <div class="img_detail">描述：{{img.detail}}</div>
-                        <div class="img_detail"><el-icon><Picture /></el-icon>： {{img.filename.length}}张</div>
-                    </el-card>
-                    
-                </div>
+            <div>
+                <template v-if="user_detail.user_img_list.length === 0">
+                    <el-empty description="当前用户尚未分享任何图片" />
+                </template>
+                <template v-else>
+                    <div class="img-container">
+                        <div v-for="img in user_detail.user_img_list" :key="img.id" class="image-wrapper">
+                            <el-card  shadow="hover">
+                                <el-image
+                                    class="demo-image__preview"
+                                    :src="img.filename[0]"
+                                    :zoom-rate="1.2"
+                                    :max-scale="7"
+                                    :min-scale="0.2"
+                                    :preview-src-list="img.filename"
+                                    :initial-index="4"
+                                    fit="contain"
+                                    :style="{width: imgWidth + 'px', height: Math.round(imgWidth*(img.height/img.width)) + 'px'}" 
+                                >
+                                <!-- 图片未加载成功时 占位内容 -->
+                                    <template #placeholder>
+                                        <img :src="'data:image/jpeg;base64,' + img.small_img" 
+                                            :style="{width: imgWidth + 'px', height: Math.round(imgWidth*(img.height/img.width)) + 'px'}"
+                                            alt="">
+                                    </template>
+                                </el-image>
+                                <div class="img_detail">标题：{{img.title}}</div>
+                                <div class="img_detail">描述：{{img.detail}}</div>
+                                <div class="img_detail"><el-icon><Picture /></el-icon>： {{img.filename.length}}张</div>
+                            </el-card>
+                        </div>
+                    </div>
+                </template>
             </div>
             
         </div>
@@ -42,7 +55,10 @@ import moment from "moment"  // 格式化时间
 import http from '@/utils/http'
 import {onMounted, ref} from 'vue'
 import { useRoute } from 'vue-router'
+import { useWindowSize } from '@vueuse/core' // 获取显示器宽度
 
+const { width } = useWindowSize()
+const imgWidth = ref()
 const user_detail = ref()
 const baseUrl = http.server_host + '/media/imgs/'
 const avatar_baseUrl = http.server_host + '/media/avatar/'
@@ -54,6 +70,9 @@ user_detail.value = {
     user_img_list:[]
 }
 
+// 每个图片的宽度
+const img_width = (width.value - 100 - 120 - 20)/3
+imgWidth.value = parseFloat(img_width.toFixed(2))
 // 获取用户详情页 数据
 const userImageList = async(user_id)=>{
    const result = await  http.getUserImage(user_id)

@@ -26,6 +26,7 @@
                         list-type="picture-card"
                         :on-preview="handledialog"
                         :on-remove="handleRemove"
+                        accept=".jpg,.jpeg,.png,"
                         :before-upload="beforeAvatarUpload"
                         :on-success="imageUploadSuccess"
                     >
@@ -121,16 +122,19 @@ const handledialog =(file)=>{
     dialogVisible.value = true
 }
 //--点击照片墙 删除图片
-const handleRemove =()=>{
-    ElMessage.success("图片删除成功！")
+const handleRemove =(file, fileList)=>{
+    console.log(file, fileList)
+    if(file.status === 'success'){
+        ElMessage.success("图片删除成功！")
+    }
 }
 //--上传图片之前 的约束: 图片文件大小、格式类型
 const beforeAvatarUpload = (rawFile)=>{
     if(rawFile.type=='image/png' || rawFile.type=='image/jpg' ||rawFile.type=='image/jpeg'){
-        if(rawFile.size/1024/1024 < 4){
+        if(rawFile.size/1024/1024 < 6){
             return true
         }else{
-            ElMessage.error('上传的文件大小小于4M!')
+            ElMessage.error('上传的文件大小小于6M!')
             return false
         }
     }else{

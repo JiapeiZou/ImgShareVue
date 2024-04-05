@@ -1,6 +1,6 @@
 <template>
 <!-- 吸顶导航栏 -->
-    <div class="menu-container" :class="{show:y>68}">
+    <div class="menu-container" :class="{ show: isFix||y>68}">
         <div class="left">
             <div>
                 <router-link to="/">
@@ -40,14 +40,18 @@
 import {ref} from 'vue'
 import { useRouter } from "vue-router"
 import { useUserStore } from "@/stores/user"
-import {useImageStore} from "@/stores/images"
 import {Search, Plus} from '@element-plus/icons-vue'
 import { useScroll } from '@vueuse/core'  // vueuse插件 useScroll方法 监测滚动距离
 import { ElMessage } from 'element-plus'
+import { defineProps } from 'vue';
+
+// 接收父组件传递过来的参数
+defineProps({
+  isFix: Boolean
+});
 
 const { y } = useScroll(window)
 const userStore = useUserStore()
-const imageStore = useImageStore()
 const router = useRouter()
 const searchText = ref('')
 
@@ -55,8 +59,8 @@ const searchText = ref('')
 const handleSearch = async()=>{
     // 发请求 获取相应数据
     if(searchText.value){
-        await imageStore.searchFilterImage(searchText.value)
-        searchText.value = ""
+        // 跳转到搜索页面 
+        router.push(`/search/img/${searchText.value}`)
     }else{
         return
     }
@@ -105,16 +109,9 @@ const handleUploadImg= ()=>{
 }
 .logo-img{
     width:auto;
-    height: 50px;
-    margin-left: 30px;
-    padding-bottom: 10px;
-}
-/* .logo{
-    margin-left: 40px;
-    margin-right: 20px;
     height: 40px;
-    width: 40px;  
-} */
+    margin: 0 30px;
+}
 .search-input{
     height: 40px;
 }
