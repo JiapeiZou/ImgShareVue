@@ -3,6 +3,7 @@
         <el-form
             ref="ruleFormRef"
             :model="form"
+            :rules="rules"
             label-width="auto"
             style="max-width: 600px"
             class="setting-form"
@@ -12,7 +13,7 @@
             <el-form-item  label="手机号码">
                 <el-input disabled :placeholder="userStore.userInfo?.user.phone_number" />
             </el-form-item>
-            <el-form-item label="用户名">
+            <el-form-item label="用户名" prop="username">
                 <el-input  v-model= "form.username" />
             </el-form-item>
             <el-form-item label="头像">
@@ -31,7 +32,7 @@
                     :on-success="handleAvatarSuccess"
                     :before-upload="beforeAvatarUpload"
                 >
-                    <img v-if="form.avatar" :src="form.avatar" class="avatar" />
+                    <img v-if="form.avatar" :src="form.avatar" class="avatar" title="点击修改头像" />
                     <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
                     <template #tip>
                         <div class="el-upload__tip">
@@ -51,24 +52,55 @@
 <script setup>
 import { Plus } from '@element-plus/icons-vue'
 import { useUserStore } from "@/stores/user"
-import {ref } from 'vue'
+import { ref } from 'vue'
 import http from '@/utils/http'
 import { ElMessage } from 'element-plus'
 
-const newAvatar = ref()
+const ruleFormRef = ref(null)
+const newAvatar = ref(null)
+const old_avatar = ref()
 const userStore = useUserStore()
 const form = ref({
     username : userStore.userInfo.user.username,
     avatar : userStore.userInfo.user.avatar
 })
+// ---自定义校验规则: 排除空格---
+function noSpaceValidator(rule, value, callback) {
+  if (/\s/.test(value)) {
+    callback(new Error('输入不能包含空格'));
+  } else {
+    callback();
+  }
+}
+// ---校验规则---
+const rules = {
+    username:[{ validator: noSpaceValidator, trigger: 'blur' },
+            { required: true, message:'用户名不能为空', trigger: 'blur' },]
+}
 
 // 表单提交： 修改个人信息
-const updateUseInfo = async()=>{
-    const { username, avatar } = form.value
-    // 提交表单，发起请求
-    await userStore.settingUserInfo({ username, avatar })
-    userStore.exitAvatar(newAvatar.value)  // 修改pinia中数据
-    ElMessage.success('修改成功！')
+const updateUseInfo = ()=>{
+    // 前端表单校验
+    ruleFormRef.value.validate(async(valid)=>{
+        if(valid){
+            const { username, avatar } = form.value
+            
+            old_avatar.value = avatar
+            
+            // 提交表单，发起请求
+            await userStore.settingUserInfo({ username, avatar })
+            // if(old_avatar === avatar){
+            //     userStore.exitAvatar(newAvatar.value)  // 修改pinia中数据
+            // }else{
+
+            // }
+           userStore.exitAvatar(newAvatar.value?newAvatar.value:old_avatar.value)  // 修改pinia中数据
+            ElMessage.success('修改成功！')
+        }else{
+            // 未通过
+            ElMessage.error('验证不通过！')
+        }
+    })
 }
 //---上传图片 成功之后
 const handleAvatarSuccess = (response)=>{

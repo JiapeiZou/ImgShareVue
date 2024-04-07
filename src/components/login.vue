@@ -3,6 +3,10 @@
     <div class="left">
       <img class="left-img" src="@/assets/loginpageimage.png" alt="">
     </div>
+    <div class="logo">
+      <img class="logo-img" src="@/assets/logo.png" alt="">
+      <span class="logo-text">IMGSHARE</span>
+    </div>
     <div class="right">
         <h1 class="login-text" >登陆</h1>
         <div class="small-text">没有账号?去 <router-link to="/register"><span style="text-decoration: underline;">注册!</span></router-link></div>
@@ -21,7 +25,7 @@
               <el-input  type="password" v-model="form.password" />
             </el-form-item>
             <el-form-item>
-              <el-button class="login_btn" color="#738490" size="large" type="primary" @click="handleLoginClick">登陆</el-button>
+              <el-button class="login_btn" color="#738490" size="large" type="primary" @click="handleLoginClick">登 陆</el-button>
             </el-form-item>
           
           </el-form>
@@ -54,8 +58,18 @@ const phoneNumber = (rule, value, callback)=>{
     callback(new Error('手机号格式不正确！'))
   }
 }
+// ---自定义校验规则: 排除空格---
+function noSpaceValidator(rule, value, callback) {
+  if (/\s/.test(value)) {
+    callback(new Error('输入不能包含空格'));
+  } else {
+    callback();
+  }
+}
+// ---校验规则---
 const rules = {
-  phone_number:[{required: true, validator: phoneNumber, trigger: 'blur'}],
+  phone_number:[{required: true, validator: phoneNumber, trigger: 'blur'},
+                {validator: noSpaceValidator, trigger: 'blur'}],
   password: [{ required: true, message:'密码不能为空', trigger: 'blur' },
               { min:6, message:'密码需大于6位', trigger: 'blur' }],
 }
@@ -72,28 +86,14 @@ const ruleFormRef = ref(null)
           if (result.code===200){
             router.push('/') 
           }
-          
       } else {
         // 未通过
         ElMessage.error('验证不通过！')
       }
     })
 }
-
-
-
-
-// export default {
- 
-//   name: 'Login',
-//   props: {msg: String},
-//   data(){
-//     return{}
-//   },
-//   mounted(){},
-//   methods:{}
- 
 </script>
+
 
 <style scoped>
 .login-container {
@@ -101,7 +101,6 @@ const ruleFormRef = ref(null)
   height: 100vh;
   display: flex;
   margin: 0;
-  
 }
 .login-text{
   margin: 0 ;
@@ -112,6 +111,21 @@ const ruleFormRef = ref(null)
   height: 100%;
   position: relative;
   overflow: hidden;
+}
+.logo{
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  color: #fff;
+  font-size: 26px;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+
+}
+.logo-img{
+  width:50px ;
+  height: 50px;
 }
 .left-img{
   display: block;
@@ -131,39 +145,18 @@ const ruleFormRef = ref(null)
   justify-content: center;
 }
 .form-box{
-  /* border: 1px solid #333; */
   background: #fff;
   width: 60%;
   padding: 20px;
   border-radius: 8px;
-
-
-  /* box-shadow: 5px 5px 5px 5px rgba(214, 212, 212, 0.75); */
 }
 .login_btn{
   width: 100%;
+  color: #fff;
 }
 .small-text{
   text-align: center;
   font-size: 14px;
   color: #726c6c;
 }
-/*
-<div class="gradient-overlay"></div>
-.gradient-overlay {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 50%;  渐变覆盖层的起始位置，这里是容器的中间位置 
-    background-image: linear-gradient(to left, rgb(255, 255, 255, 1), rgba(255, 255, 255, 0)); 从白色到透明的渐变 
-    z-index: 1; 确保覆盖在图片上方 
-    }
-*/
-   
-
-
-
-
-
 </style>

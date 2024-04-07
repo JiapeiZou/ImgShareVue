@@ -80,10 +80,10 @@ const srcList = [
 ]
 // 搜索图片功能
 const searchImages = async()=>{
-    if(searchText.value){
-        router.push(`/search/img/${searchText.value}`)
+    if(searchText.value.trim()){
+        router.push(`/search/img/${searchText.value.trim()}`)
     }else{
-        return
+        ElMessage.error('请输入有效的搜索内容！');
     }
 }
 // 获取首页数据

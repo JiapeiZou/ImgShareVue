@@ -58,11 +58,12 @@ const searchText = ref('')
 // 搜索图片功能
 const handleSearch = async()=>{
     // 发请求 获取相应数据
-    if(searchText.value){
+    const trimmedSearchText = searchText.value.trim()
+    if(trimmedSearchText){
         // 跳转到搜索页面 
-        router.push(`/search/img/${searchText.value}`)
+        router.push(`/search/img/${trimmedSearchText}`)
     }else{
-        return
+        ElMessage.error('请输入有效的搜索内容！');
     }
 }
 // ---upload上传图片---

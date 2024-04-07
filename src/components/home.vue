@@ -118,16 +118,16 @@ const message = ref('')
 
 // ---搜索按钮用户名 回车键事件---
 const searchImages = () =>{
-  if(searchText.value){
-    router.push({path: '/search', query: { su: searchText.value }})
+  if(searchText.value.trim()){
+    router.push({path: '/search', query: { su: searchText.value.trim() }})
     searchText.value = "" // 清空输入框
   }else{
-    return
+    ElMessage.error('请输入有效的搜索内容！');
   }
 }
 //  ----下拉菜单---
 const handleCommand = (command) => {
-  // command代表点击的菜单中的哪一行 a=设置 b=退出
+  // command代表点击的菜单中的哪一行 a=个人主页 b=个人设置
   if (command === 'b'){
     router.push('/setting')
   }

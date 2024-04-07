@@ -28,9 +28,7 @@ export const useUserStore = defineStore('user', ()=>{
     const settingUserInfo = async({username, avatar})=>{
         const result = await http.settingUser({username, avatar})
         if (result.code === 200){
-            console.log('result.data.username00000', result.data.username)
             userInfo.value.user.username = result.data.username
-            console.log('userInfo.value.user.username11111', userInfo.value.user.username)
         }else{
             return Promise.reject(new Error(result.message))
         }
@@ -39,7 +37,6 @@ export const useUserStore = defineStore('user', ()=>{
     const exitAvatar = (img)=>{
         userInfo.value.user.avatar = img
     }
-
     // 以对象的形式返回
     return {
         userInfo,

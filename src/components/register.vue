@@ -3,6 +3,10 @@
     <div class="left">
       <img class="left-img" src="@/assets/registerpageimage.png" alt="">
     </div>
+    <div class="logo">
+      <img class="logo-img" src="@/assets/logo.png" alt="">
+      <span class="logo-text">IMGSHARE</span>
+    </div>
     <div class="right">
       <h1 class="login-text">注册</h1>
       <div class="small-text">已有账号？立即 <router-link to="/login"><span style="text-decoration: underline;">登录</span></router-link></div>
@@ -28,7 +32,7 @@
             <el-input v-model="form.confirm_password" type="password" />
           </el-form-item>
           <el-form-item>
-            <el-button color="#dddae0" class="register_btn" size="large" type="primary" @click="handleRegisterClick">注册</el-button>
+            <el-button color="#738490" class="register_btn" size="large" type="primary" @click="handleRegisterClick">注 册</el-button>
           </el-form-item> 
         </el-form>
         <div class='small-text'><el-icon><ArrowLeft /></el-icon> <router-link to="/">返回首页</router-link></div>
@@ -58,24 +62,35 @@ const confirm_psw = (rule, value, callback) => {
     callback()
   }
   else {
-    callback(new Error('Please input the password again'))
+    callback(new Error('请再次确认密码！'))
   }
 }
 // ---自定义校验规则:手机号---
 const phone_number = (rule, value, callback)=>{
-  if (value.length === 11) {
+  if (value.trim().length === 11 ) {
     callback()
   }
   else {
     callback(new Error('手机号格式不正确！'))
   }
 }
+// ---自定义校验规则: 排除空格---
+function noSpaceValidator(rule, value, callback) {
+  if (/\s/.test(value)) {
+    callback(new Error('输入不能包含空格'));
+  } else {
+    callback();
+  }
+}
 // ---规则---
 const rules = {
-  username: [{ required: true, message:'用户名不能为空', trigger: 'blur' }],
-  phone_number:[{required: true, validator: phone_number, trigger: 'blur'}],
+  username: [{ required: true, message:'用户名不能为空', trigger: 'blur' },
+            { validator: noSpaceValidator, trigger: 'blur' }],
+  phone_number:[{required: true, validator: phone_number, trigger: 'blur'},
+            { validator: noSpaceValidator, trigger: 'blur' }],
   password: [{ required: true, message:'密码不能为空', trigger: 'blur' },
-              { min:6, message:'密码需大于6位', trigger: 'blur' }],
+              { min:6, message:'密码需大于6位', trigger: 'blur' },
+              { validator: noSpaceValidator, trigger: 'blur' }],
   confirm_password:[{ required: true, validator: confirm_psw , trigger: 'blur' }]
 }
 
@@ -111,6 +126,21 @@ const handleRegisterClick = () =>{
   position: relative;
   overflow: hidden;
 }
+.logo{
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  color: #8b8e91;
+  font-size: 26px;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+
+}
+.logo-img{
+  width:50px ;
+  height: 50px;
+}
 .left-img{
   display: block;
   width: 100%;
@@ -134,6 +164,7 @@ const handleRegisterClick = () =>{
 }
 .register_btn{
   width: 100%;
+  color: #fff;
 }
 .small-text{
   text-align: center;
