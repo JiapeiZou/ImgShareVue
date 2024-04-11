@@ -215,7 +215,7 @@ const editImgForm = ()=>{
     // 表单验证
     ruleFormRef.value.validate(async(valid) => {
         if (valid) {
-            // 格式化图片文件名
+            // 解构图片文件名 取出最后一个/后的内容 
             form.value.imgs =  form.value.imgs.map((url)=>{
                 return url.substring(url.lastIndexOf('/') + 1);
             })

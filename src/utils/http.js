@@ -50,8 +50,8 @@ class Http{
         const url = '/detail/image'
         return this._post(url,data)
     }
-    getIndex(){ // 首页获取数据
-        const url = '/home'
+    getIndex(page){ // 首页获取数据
+        const url = '/home/' + page
         return this.http.get(url)
     }
     getUserImage(user_id){ // 获取用户图片相关信息

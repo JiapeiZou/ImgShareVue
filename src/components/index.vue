@@ -1,4 +1,5 @@
 <template>
+<div class="index-box">
     <div>
         <div class="search-img">
             <div class="search">
@@ -35,17 +36,27 @@
             <div class="bannar">
                 <el-carousel indicator-position="none">
                     <el-carousel-item v-for="(img,index) in srcList" :key="index">
-                        <img :src="img" alt=""  class="banner-img">
+                        <img :src="img" alt=""  class="banner-img" >
                     </el-carousel-item>
                 </el-carousel>
             </div>
         </div>
-        <Img v-if="imgList" :imgList="imgList" />
+        <Img v-if="imgList" :imgList="imgList" :image_all_count="image_all_count" />
         <div v-else> 
-            <el-empty description="第一个用户就是你， 赶紧上传图片吧！" />
+            <el-empty description="赶紧上传图片吧！" />
         </div>
     </div>
-    
+    <!-- 分页  :current-page="currentPage"-->
+    <div>
+        <el-pagination  
+            layout="prev, pager, next" 
+            background
+            :page-size="20"
+            :total="image_all_count" 
+            @current-change="pageChange"
+        />
+    </div>
+</div>
 </template>
 
 <script setup>
@@ -61,6 +72,7 @@ import { ElMessage } from 'element-plus';
 const router = useRouter()
 const userStore = useUserStore()
 const searchText = ref('')
+const image_all_count = ref()
 const img_width = ref()
 const imgList = ref(null)
 const { width } = useWindowSize()
@@ -87,22 +99,36 @@ const searchImages = async()=>{
     }
 }
 // 获取首页数据
-const getindexInfo= async() => {
-    const result = await http.getIndex()
+const getindexInfo= async(page) => {
+    const result = await http.getIndex(page)
     if( result.code === 200){
-        imgList.value = result.data // 传递给子组件
+        imgList.value = result.data.image_info_list // 传递给子组件
+        image_all_count.value = result.data.image_all_count
     }else{
         ElMessage.warning(result.message)
     }
 }
+
+// 分页器 上下一页
+const pageChange = (value) =>{
+    getindexInfo(value)
+}
+
+
 // 等页面加载完成后 获取首页数据
 onMounted(() => {
-    getindexInfo();  
+    getindexInfo(1);  
 });
 
 </script>
 
 <style scoped>
+.index-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 .img-container {
     width: 100%;
     column-count: 3; /* 设置列数为3 */

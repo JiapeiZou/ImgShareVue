@@ -1,45 +1,46 @@
 <template>
-    <div class="img-container">
-        <div v-for="img in processedImgList" :key="img.id" class="image-wrapper">
-            <el-image
-                class="demo-image__preview"
-                :src="img.filename[0]"
-                :lazy="true"
-                :zoom-rate="1.2"
-                :max-scale="7"
-                :min-scale="0.2"
-                :preview-src-list="img.filename"
-                :initial-index="4"
-                fit="contain"
-                :style="{width: img_width + 'px', height: Math.round(img_width*(img.height/img.width)) + 'px'}"  
-            >
-            <!-- 根据固定的宽度 计算当前图片缩放的高度  新宽度 / 原始宽高比 -->
-                <template #placeholder>
-                    <img 
-                        :src="'data:image/jpeg;base64,' + img.small_img" 
-                        :style="{ width: img_width + 'px', height: Math.round(img_width*(img.height/img.width)) + 'px'}"
-                        alt=""
-                    >
-                </template>
-            </el-image>
-
-            <!-- 图片蒙层 -->
-            <div class="overlay">  
-                <div class="img_detail">
-                    <img
-                    :src="http.server_host + '/media/avatar/' + img.user_avatar"
-                    class="avatar"
-                    @click="goToUserDetail(img.user_id)"
-                    />
-                    <div>
-                        <h3 class="img_text">{{img.username}}</h3>
-                        <span class="img_text">{{img.title}}</span>
-                    </div>
-                </div>  
+   
+        <div class="img-container">
+            <div v-for="img in processedImgList" :key="img.id" class="image-wrapper">
+                <el-image
+                    lazy
+                    class="demo-image__preview"
+                    :src="img.filename[0]"
+                    :zoom-rate="1.2"
+                    :max-scale="7"
+                    :min-scale="0.2"
+                    :preview-src-list="img.filename"
+                    :initial-index="4"
+                    fit="contain"
+                    :style="{width: img_width + 'px', height: Math.round(img_width*(img.height/img.width)) + 'px'}"   
+                >
+                <!-- 根据固定的宽度 计算当前图片缩放的高度  新宽度 / 原始宽高比 -->
+                    <template #placeholder>
+                        <img 
+                            :src="'data:image/jpeg;base64,' + img.small_img" 
+                            :style="{ width: img_width + 'px', height: Math.round(img_width*(img.height/img.width)) + 'px'}"
+                            alt=""
+                        >
+                    </template>
+                </el-image>
+                <!-- 图片蒙层 -->
+                <div class="overlay">  
+                    <div class="img_detail">
+                        <img
+                            :src="http.server_host + '/media/avatar/' + img.user_avatar"
+                            class="avatar"
+                            @click="goToUserDetail(img.user_id)"
+                        />
+                        <div>
+                            <h3 class="img_text">{{img.username}}</h3>
+                            <span class="img_text">{{img.title}}</span>
+                        </div>
+                    </div>  
+                </div>
             </div>
         </div>
-            
-     </div>
+        
+    
 </template>
 <script setup>
 import http from '@/utils/http'
@@ -49,7 +50,8 @@ import {useImageStore} from "@/stores/images"
 import { computed, ref } from 'vue';
 import { useWindowSize } from '@vueuse/core' // 获取显示器宽度
 
-const props = defineProps({ imgList: Array })  // 接收父组件传递的参数
+
+const props = defineProps({ imgList: Array , image_all_count: Number})  // 接收父组件传递的参数
 const baseUrl = http.server_host + '/media/imgs/'
 const router = useRouter()
 const imageStore = useImageStore()
@@ -69,9 +71,11 @@ img_width.value = parseFloat(imageWidth.toFixed(2))
 const goToUserDetail = (user_id)=>{
     router.push(`/user/${user_id}`)
 }
+
 </script>
 
 <style scoped>
+
 .img-container {
     width: 100%;
     column-count: 3; /* 设置列数为3 */
@@ -120,8 +124,7 @@ const goToUserDetail = (user_id)=>{
     left: 18px;
     display: flex;
     gap: 12px;
-    color: #fbf9f9;
-    
+    color: #fff; 
 }
 .img_text{
     font-size: 14px;

@@ -9,7 +9,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 const app = createApp(App)
 const pinia = createPinia()
-pinia.use(piniaPluginPersistedstate)  // pinia持久护插件
+pinia.use(piniaPluginPersistedstate)
 app.use(ElementPlus)
 app.use(router)
 app.use(pinia)

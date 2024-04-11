@@ -26,7 +26,6 @@ export const useImageStore = defineStore('img', ()=>{
         const result = await http.deletePostImg(id)
         if(result.code === 200){
             ElMessage.success('删除成功！')
-            // getindexInfo()
         }else{
             ElMessage.error(result.message)
         }
